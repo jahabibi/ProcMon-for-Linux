@@ -13,7 +13,6 @@
 #include <bits/stdc++.h>
 
 #include "sqlite3_storage_engine.h"
-#include "../display/screen_configuration.h"
 
 typedef ITelemetry MockTelemetry;
 typedef StackTrace MockTrace;
@@ -236,28 +235,28 @@ TEST_CASE("storage engine can retrieve added items", "[Sqlite3StorageEngine]") {
     SECTION("Querying without any pid and specified page constaints returns expected results") {
         auto pageNum = 0;
         auto eventsPerPage = 100;
-        auto results = engine.QueryByEventsinPage({}, pageNum++, eventsPerPage, ScreenConfiguration::time, true);
+        auto results = engine.QueryByEventsinPage({}, pageNum++, eventsPerPage, IStorageEngine::Sort::time, true);
         CHECK(checkMatches(results, seenProcesses, pids, eventsPerPage));
 
-        results = engine.QueryByEventsinPage({}, pageNum, eventsPerPage, ScreenConfiguration::time, true);
+        results = engine.QueryByEventsinPage({}, pageNum, eventsPerPage, IStorageEngine::Sort::time, true);
         CHECK(checkMatches(results, seenProcesses, pids, eventsPerPage));
 
         eventsPerPage = 200;
-        results = engine.QueryByEventsinPage({}, pageNum, eventsPerPage, ScreenConfiguration::time, true);
+        results = engine.QueryByEventsinPage({}, pageNum, eventsPerPage, IStorageEngine::Sort::time, true);
         CHECK(checkMatches(results, seenProcesses, pids, eventsPerPage));
     }
 
     SECTION("Querying with a single pid and specified page constaints returns expected results") {
         auto pageNum = 0;
         auto eventsPerPage = 100;
-        auto results = engine.QueryByEventsinPage({1000}, pageNum, eventsPerPage, ScreenConfiguration::time, true);
+        auto results = engine.QueryByEventsinPage({1000}, pageNum, eventsPerPage, IStorageEngine::Sort::time, true);
         CHECK((checkMatches(results, seenProcesses, pids, eventsPerPage) || checkMatches(results, seenProcesses, pids, pidFreq[1000])));
     }
 
     SECTION("Querying with a set of pids and specified page constaints returns expected results") {
         auto pageNum = 0;
         auto eventsPerPage = 100;
-        auto results = engine.QueryByEventsinPage({1000, 1005, 1006, 1008}, pageNum, eventsPerPage, ScreenConfiguration::time, true);
+        auto results = engine.QueryByEventsinPage({1000, 1005, 1006, 1008}, pageNum, eventsPerPage, IStorageEngine::Sort::time, true);
         uint count = pidFreq[1000] + pidFreq[1005] + pidFreq[1006] + pidFreq[1008];
         CHECK((checkMatches(results, seenProcesses, pids, eventsPerPage) || checkMatches(results, seenProcesses, pids, count)));
     }

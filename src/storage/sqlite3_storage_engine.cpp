@@ -567,7 +567,7 @@ std::vector<ITelemetry> Sqlite3StorageEngine::QueryByResultCodeInTimespan(
  * 
  */
 std::vector<ITelemetry> Sqlite3StorageEngine::QueryByEventsinPage(
-    std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls)
+    std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls)
 {
     if(!ready)
         throw std::runtime_error{"Storage engine must be initialized first."};
@@ -586,31 +586,31 @@ std::vector<ITelemetry> Sqlite3StorageEngine::QueryByEventsinPage(
 
     switch(orderBy)
     {
-        case ScreenConfiguration::time:
+        case IStorageEngine::Sort::time:
             raw_sql_statement += "timestamp";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             break;
-        case ScreenConfiguration::pid:
+        case IStorageEngine::Sort::pid:
             raw_sql_statement += "pid";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::process:
+        case IStorageEngine::Sort::process:
             raw_sql_statement += "processname";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::operation:
+        case IStorageEngine::Sort::operation:
             raw_sql_statement += "syscall";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::result:
+        case IStorageEngine::Sort::result:
             raw_sql_statement += "resultcode";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::duration:
+        case IStorageEngine::Sort::duration:
             raw_sql_statement += "duration";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
@@ -629,7 +629,7 @@ std::vector<ITelemetry> Sqlite3StorageEngine::QueryByEventsinPage(
 }
 
 std::vector<ITelemetry> Sqlite3StorageEngine::QueryByFilteredEventsinPage(
-    std::string filter, std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls)
+    std::string filter, std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls)
 {
     if(!ready)
         throw std::runtime_error{"Storage engine must be initialized first."};
@@ -655,31 +655,31 @@ std::vector<ITelemetry> Sqlite3StorageEngine::QueryByFilteredEventsinPage(
 
     switch(orderBy)
     {
-        case ScreenConfiguration::time:
+        case IStorageEngine::Sort::time:
             raw_sql_statement += "timestamp";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             break;
-        case ScreenConfiguration::pid:
+        case IStorageEngine::Sort::pid:
             raw_sql_statement += "pid";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::process:
+        case IStorageEngine::Sort::process:
             raw_sql_statement += "processname";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::operation:
+        case IStorageEngine::Sort::operation:
             raw_sql_statement += "syscall";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::result:
+        case IStorageEngine::Sort::result:
             raw_sql_statement += "resultcode";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::duration:
+        case IStorageEngine::Sort::duration:
             raw_sql_statement += "duration";
             raw_sql_statement += (asc) ? SQL_ASCENDING : SQL_DESCENDING;
             raw_sql_statement += ", timestamp ASC";
@@ -699,7 +699,7 @@ std::vector<ITelemetry> Sqlite3StorageEngine::QueryByFilteredEventsinPage(
 }
 
 std::vector<int> Sqlite3StorageEngine::QueryIdsBySearch(
-    std::string search, std::vector<pid_t> pids, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls)
+    std::string search, std::vector<pid_t> pids, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls)
 {
     if(!ready)
         throw std::runtime_error{"Storage engine must be initialized first."};
@@ -712,26 +712,26 @@ std::vector<int> Sqlite3StorageEngine::QueryIdsBySearch(
 
     switch(orderBy)
     {
-        case ScreenConfiguration::time:
+        case IStorageEngine::Sort::time:
             raw_select_sql_statement += (asc) ? SQL_SELECT_ROWNUM(std::string("timestamp"), SQL_ASCENDING) : SQL_SELECT_ROWNUM(std::string("timestamp"), SQL_DESCENDING);
             break;
-        case ScreenConfiguration::pid:
+        case IStorageEngine::Sort::pid:
             raw_select_sql_statement += (asc) ? SQL_SELECT_ROWNUM(std::string("pid"), SQL_ASCENDING) : SQL_SELECT_ROWNUM(std::string("pid"), SQL_DESCENDING);
             raw_select_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::process:
+        case IStorageEngine::Sort::process:
             raw_select_sql_statement += (asc) ? SQL_SELECT_ROWNUM(std::string("processname"), SQL_ASCENDING) : SQL_SELECT_ROWNUM(std::string("processname"), SQL_DESCENDING);
             raw_select_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::operation:
+        case IStorageEngine::Sort::operation:
             raw_select_sql_statement += (asc) ? SQL_SELECT_ROWNUM(std::string("syscall"), SQL_ASCENDING) : SQL_SELECT_ROWNUM(std::string("syscall"), SQL_DESCENDING);
             raw_select_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::result:
+        case IStorageEngine::Sort::result:
             raw_select_sql_statement += (asc) ? SQL_SELECT_ROWNUM(std::string("resultcode"), SQL_ASCENDING) : SQL_SELECT_ROWNUM(std::string("resultcode"), SQL_DESCENDING);
             raw_select_sql_statement += ", timestamp ASC";
             break;
-        case ScreenConfiguration::duration:
+        case IStorageEngine::Sort::duration:
             raw_select_sql_statement += (asc) ? SQL_SELECT_ROWNUM(std::string("duration"), SQL_ASCENDING) : SQL_SELECT_ROWNUM(std::string("duration"), SQL_DESCENDING);
             raw_select_sql_statement += ", timestamp ASC";
             break;            

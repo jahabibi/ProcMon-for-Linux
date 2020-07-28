@@ -10,8 +10,14 @@
 
 #include "column.h"
 #include "screen_configuration.h"
-#include "event_formatter.h"
+#include "../common/telemetry.h"
+
+#pragma push_macro("OK")
+#undef OK
+#include "../common/event_formatter.h"
+#include "../common/kill_event_formatter.h"
 #include "../configuration/procmon_configuration.h"
+#pragma pop_macro("OK")
 
 // default screen dimensions
 #define MINIMUM_HEIGHT  15
@@ -137,7 +143,7 @@ class Screen {
         Column* detailColumn;
 
         // column map
-        std::map<ScreenConfiguration::sort, Column*> columnMap;
+        std::map<IStorageEngine::Sort, Column*> columnMap;
 
         // ncurses panels
         PANEL* headerPanel;
@@ -203,7 +209,7 @@ class Screen {
         void addLine(ITelemetry lineData);
         void displayEvents(std::vector<ITelemetry> screenData);
         void displaySearchEvents(std::vector<int> idList, int searchCount);
-        void toggleColumnSort(ScreenConfiguration::sort selectedColumn);
+        void toggleColumnSort(IStorageEngine::Sort selectedColumn);
         int getTotalEventsOnScreen();
         int getTotalLines();
         int getCurrentPage();
@@ -230,7 +236,7 @@ class Screen {
         void handleMouseEvent(MEVENT* event);
 
         // Helper Functions
-        void toggleColumnHighlight(ScreenConfiguration::sort selectedColumn);
+        void toggleColumnHighlight(IStorageEngine::Sort selectedColumn);
         void windowPrintFill(WINDOW * win, int colorPair, int x, int y, const char * fmt, ...);
         void windowPrintFillRight(WINDOW * win, int colorPair, int x, int y, const char * fmt, ...);
         std::string calculateDeltaTimestamp(uint64_t ebpfEventTimestamp);

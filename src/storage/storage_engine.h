@@ -8,13 +8,14 @@
 
 #include "../common/telemetry.h"
 #include "../common/event.h"
-#include "../display/screen_configuration.h"
 
 class IStorageEngine
 {
 public:
     IStorageEngine() {}
     virtual ~IStorageEngine(){};
+
+    enum Sort {time, pid, process, operation, result, duration};
 
     // Initialize the storage engine with expected syscalls to be stored.
     virtual bool Initialize(const std::vector<Event> &syscalls) = 0;
@@ -46,16 +47,16 @@ public:
     // Get a specified page of telemetry data for a given pids
     // optionally filter by syscalls.
     virtual std::vector<ITelemetry> QueryByEventsinPage(
-        std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls = {}) = 0;
+        std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls = {}) = 0;
 
     virtual std::vector<ITelemetry> QueryByResultCodeInTimespan(
         int resultCode, double start_time = 0.0, double end_time = 0.0, const std::vector<Event> &syscalls = {}) = 0;
 
     virtual std::vector<ITelemetry> QueryByFilteredEventsinPage(
-        std::string filter, std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls = {}) = 0;
+        std::string filter, std::vector<pid_t> pids, uint pageNumber, uint eventsPerPage, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls = {}) = 0;
 
     virtual std::vector<int> QueryIdsBySearch(
-        std::string search, std::vector<pid_t> pids, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls = {}) = 0;
+        std::string search, std::vector<pid_t> pids, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls = {}) = 0;
 
     // Store API
     virtual bool Store(ITelemetry data) = 0;

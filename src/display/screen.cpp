@@ -2,10 +2,7 @@
 // Licensed under the MIT License.
 
 #include "screen.h"
-#include "event_formatter.h"
-#include "kill_event_formatter.h"
 #include "../logging/easylogging++.h"
-#include "../common/telemetry.h"
 
 #include <version.h>
 #include <chrono>
@@ -379,7 +376,7 @@ void Screen::run()
                     else if (!columnSortViewActive) showDetailView();
                     else if (columnSortViewActive) {
                         closeColumnView();
-                        toggleColumnSort((ScreenConfiguration::sort)columnSortLineSelection);
+                        toggleColumnSort((IStorageEngine::Sort)columnSortLineSelection);
                     }
 
                     break;
@@ -769,55 +766,55 @@ void Screen::drawSearchPrompt(std::string search, bool error)
 void Screen::initTimestampColumn()
 {
     timeStampColumn = new Column(columnHeight, DEFAULT_TIME_COL_WIDTH, HEADER_HEIGHT, 0, " Timestamp");
-    columnMap[ScreenConfiguration::time] = timeStampColumn;
+    columnMap[IStorageEngine::Sort::time] = timeStampColumn;
     
     // toggle header highlight based on screen configuration
-    if(screenConfig.getColumnSort() == ScreenConfiguration::time) timeStampColumn->toggleHeaderHighlight();
+    if(screenConfig.getColumnSort() == IStorageEngine::Sort::time) timeStampColumn->toggleHeaderHighlight();
 }
 
 void Screen::initPidColumn()
 {
     pidColumn = new Column(columnHeight, DEFAULT_PID_COL_WIDTH, HEADER_HEIGHT, DEFAULT_PID_COL_X, " PID");
-    columnMap[ScreenConfiguration::pid] = pidColumn;
+    columnMap[IStorageEngine::Sort::pid] = pidColumn;
 
     // toggle header highlight based on screen configuration
-    if(screenConfig.getColumnSort() == ScreenConfiguration::pid) pidColumn->toggleHeaderHighlight();
+    if(screenConfig.getColumnSort() == IStorageEngine::Sort::pid) pidColumn->toggleHeaderHighlight();
 }
 
 void Screen::initProcessColumn()
 {
     processColumn = new Column(columnHeight, DEFAULT_PROCESS_COL_WIDTH, HEADER_HEIGHT, DEFAULT_PROCESS_COL_X, " Process");
-    columnMap[ScreenConfiguration::process] = processColumn;
+    columnMap[IStorageEngine::Sort::process] = processColumn;
 
     // toggle header highlight based on screen configuration
-    if(screenConfig.getColumnSort() == ScreenConfiguration::process) processColumn->toggleHeaderHighlight();
+    if(screenConfig.getColumnSort() == IStorageEngine::Sort::process) processColumn->toggleHeaderHighlight();
 }
 
 void Screen::initOperationColumn()
 {
     operationColumn = new Column(columnHeight, DEFAULT_OPERATION_COL_WIDTH, HEADER_HEIGHT, DEFAULT_OPERATION_COL_X, " Operation");
-    columnMap[ScreenConfiguration::operation] = operationColumn;
+    columnMap[IStorageEngine::Sort::operation] = operationColumn;
 
     // toggle header highlight based on screen configuration
-    if(screenConfig.getColumnSort() == ScreenConfiguration::operation) operationColumn->toggleHeaderHighlight();
+    if(screenConfig.getColumnSort() == IStorageEngine::Sort::operation) operationColumn->toggleHeaderHighlight();
 }
 
 void Screen::initResultColumn()
 {
     resultColumn = new Column(columnHeight, DEFAULT_RESULT_COL_WIDTH, HEADER_HEIGHT, DEFAULT_RESULT_COL_X, " Result");
-    columnMap[ScreenConfiguration::result] = resultColumn;
+    columnMap[IStorageEngine::Sort::result] = resultColumn;
 
     // toggle header highlight based on screen configuration
-    if(screenConfig.getColumnSort() == ScreenConfiguration::result) resultColumn->toggleHeaderHighlight();
+    if(screenConfig.getColumnSort() == IStorageEngine::Sort::result) resultColumn->toggleHeaderHighlight();
 }
 
 void Screen::initDurationColumn()
 {
     durationColumn = new Column(columnHeight, DEFAULT_DURATION_COL_WIDTH, HEADER_HEIGHT, DEFAULT_DURATION_COL_X, " Duration (ms)");
-    columnMap[ScreenConfiguration::duration] = durationColumn;
+    columnMap[IStorageEngine::Sort::duration] = durationColumn;
 
     // toggle header highlight based on screen configuration
-    if(screenConfig.getColumnSort() == ScreenConfiguration::duration) durationColumn->toggleHeaderHighlight();
+    if(screenConfig.getColumnSort() == IStorageEngine::Sort::duration) durationColumn->toggleHeaderHighlight();
 }
 
 void Screen::initDetailColumn()
@@ -1415,11 +1412,11 @@ void Screen::displaySearchEvents(std::vector<int> idList, int searchCount)
     }
 }
 
-void Screen::toggleColumnSort(ScreenConfiguration::sort selectedColumn)
+void Screen::toggleColumnSort(IStorageEngine::Sort selectedColumn)
 {
     ProcmonConfiguration * config = configPtr.get();
     auto storageEngine = config->GetStorage();
-    ScreenConfiguration::sort columnSort = screenConfig.getColumnSort();
+    IStorageEngine::Sort columnSort = screenConfig.getColumnSort();
 
     // is this column currently selected?
     if(screenConfig.getColumnSort() == selectedColumn)
@@ -1665,7 +1662,7 @@ void Screen::showColumnView()
     y++;
 
     // draw columns labels to window
-    for(std::map<ScreenConfiguration::sort, Column*>::iterator iter=columnMap.begin();
+    for(std::map<IStorageEngine::Sort, Column*>::iterator iter=columnMap.begin();
                 iter != columnMap.end();
                 iter++)
     {
@@ -1727,9 +1724,9 @@ void Screen::columnScrollDown()
     // check if we are at the top of the page
     if(columnSortLineSelection < columnMap.size()-1)
     {
-        windowPrintFill(columnWin, LINE_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(ScreenConfiguration::sort)(columnSortLineSelection)]->getColumnName().c_str());
+        windowPrintFill(columnWin, LINE_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(IStorageEngine::Sort)(columnSortLineSelection)]->getColumnName().c_str());
         columnSortLineSelection++;
-        windowPrintFill(columnWin, HIGHLIGHT_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(ScreenConfiguration::sort)(columnSortLineSelection)]->getColumnName().c_str());
+        windowPrintFill(columnWin, HIGHLIGHT_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(IStorageEngine::Sort)(columnSortLineSelection)]->getColumnName().c_str());
     }
 
     // reset color
@@ -1743,9 +1740,9 @@ void Screen::columnScrollUp()
     if(columnSortLineSelection > 0)
     {
         // highlight row below and set current to default
-        windowPrintFill(columnWin, LINE_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(ScreenConfiguration::sort)(columnSortLineSelection)]->getColumnName().c_str());
+        windowPrintFill(columnWin, LINE_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(IStorageEngine::Sort)(columnSortLineSelection)]->getColumnName().c_str());
         columnSortLineSelection--;
-        windowPrintFill(columnWin, HIGHLIGHT_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(ScreenConfiguration::sort)(columnSortLineSelection)]->getColumnName().c_str());
+        windowPrintFill(columnWin, HIGHLIGHT_COLOR, 1, columnSortLineSelection + COLUMN_VIEW_Y_OFFSET, "%s", columnMap[(IStorageEngine::Sort)(columnSortLineSelection)]->getColumnName().c_str());
     }
 
     // reset color
@@ -1778,12 +1775,12 @@ void Screen::handleMouseEvent(MEVENT* event)
             if(event->y == HEADER_HEIGHT)
             {
                 // check if timestamp header was clicked
-                if(event->x > timeStampColumn->getX() && event->x < pidColumn->getX()) toggleColumnSort(ScreenConfiguration::time);
-                else if(event->x > pidColumn->getX() && event->x < processColumn->getX()) toggleColumnSort(ScreenConfiguration::pid);
-                else if(event->x > processColumn->getX() && event->x < operationColumn->getX()) toggleColumnSort(ScreenConfiguration::process);
-                else if(event->x > operationColumn->getX() && event->x < resultColumn->getX()) toggleColumnSort(ScreenConfiguration::operation);
-                else if(event->x > resultColumn->getX() && event->x < durationColumn->getX()) toggleColumnSort(ScreenConfiguration::result);
-                else if(event->x > durationColumn->getX() && event->x < detailColumn->getX()) toggleColumnSort(ScreenConfiguration::duration);
+                if(event->x > timeStampColumn->getX() && event->x < pidColumn->getX()) toggleColumnSort(IStorageEngine::Sort::time);
+                else if(event->x > pidColumn->getX() && event->x < processColumn->getX()) toggleColumnSort(IStorageEngine::Sort::pid);
+                else if(event->x > processColumn->getX() && event->x < operationColumn->getX()) toggleColumnSort(IStorageEngine::Sort::process);
+                else if(event->x > operationColumn->getX() && event->x < resultColumn->getX()) toggleColumnSort(IStorageEngine::Sort::operation);
+                else if(event->x > resultColumn->getX() && event->x < durationColumn->getX()) toggleColumnSort(IStorageEngine::Sort::result);
+                else if(event->x > durationColumn->getX() && event->x < detailColumn->getX()) toggleColumnSort(IStorageEngine::Sort::duration);
             }
             // check if user is clicking on an event
             else if(event->y > HEADER_HEIGHT && event->y < screenH - 1 && event->y < (getTotalEventsOnScreen() + HEADER_HEIGHT))

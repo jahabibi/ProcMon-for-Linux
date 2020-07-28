@@ -8,26 +8,26 @@
 #include <ncurses.h>
 #include <math.h>
 
+#include "../storage/storage_engine.h"
+
 class ScreenConfiguration
 {
     public:
-        enum sort {time, pid, process, operation, result, duration};
-
         ScreenConfiguration()
         { 
             // set default view for UI
-            columnSort = ScreenConfiguration::time;
+            columnSort = IStorageEngine::Sort::time;
             columnAscending = true;
         }
 
-        void setColumnSort(ScreenConfiguration::sort sort) { columnSort = sort; }
-        ScreenConfiguration::sort getColumnSort() { return columnSort; }
+        void setColumnSort(IStorageEngine::Sort sort) { columnSort = sort; }
+        IStorageEngine::Sort getColumnSort() { return columnSort; }
         void toggleColumnAscending() { columnAscending = !columnAscending; }
         void setColumnAscending(bool asc) { columnAscending = asc; }
         bool getColumnAscending() { return columnAscending; }
 
     private:
         // UI Control Variables
-        sort columnSort;
+        IStorageEngine::Sort columnSort;
         bool columnAscending;
 };

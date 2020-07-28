@@ -1,5 +1,5 @@
 
-add_library(storage-lib 
+add_library(storage-lib STATIC
     "${CMAKE_CURRENT_SOURCE_DIR}/mock_storage_engine.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/sqlite3_storage_engine.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/storage_proxy.cpp"

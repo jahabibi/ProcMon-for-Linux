@@ -28,7 +28,7 @@ bool MockStorageEngine::StoreMany(std::vector<MockTelemetry> data)
 }
 
 std::vector<int> MockStorageEngine::QueryIdsBySearch(
-    std::string search, std::vector<pid_t> pids, ScreenConfiguration::sort orderBy, bool asc, const std::vector<Event>& syscalls)
+    std::string search, std::vector<pid_t> pids, IStorageEngine::Sort orderBy, bool asc, const std::vector<Event>& syscalls)
 {
     return std::vector<int>();
 }
