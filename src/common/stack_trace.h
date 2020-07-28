@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef STACK_TRACE_H
-#define STACK_TRACE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -45,5 +44,3 @@ struct StackTrace
     }
 
 };
-
-#endif // STACK_TRACE_H

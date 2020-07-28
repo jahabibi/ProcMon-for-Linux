@@ -1,4 +1,4 @@
 
-add_library(logging-static STATIC
+add_library(logging-lib 
     "${CMAKE_CURRENT_SOURCE_DIR}/easylogging++.cc"
 )

@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef EVENT_FORMATTER_H
-#define EVENT_FORMATTER_H
+#pragma once
 
 #include <vector>
 
@@ -38,5 +37,3 @@ public:
     virtual std::string GetDuration(ITelemetry event);
     virtual std::string GetDetails(ITelemetry event);
 };
-
-#endif

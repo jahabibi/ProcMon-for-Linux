@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef MOCK_STORAGE_ENGINE_H
-#define MOCK_STORAGE_ENGINE_H
+#pragma once
 
 #include <map>
 #include <mutex>
@@ -54,5 +53,3 @@ public:
     // Load API
     std::tuple<uint64_t, std::string> Load(std::string filepath) { return std::make_tuple(0, ""); };
 };
-
-#endif // MOCK_STORAGE_ENGINE_H

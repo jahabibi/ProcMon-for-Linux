@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef COLUMN_H
-#define COLUMN_H
+#pragma once
 
 #include <ncurses.h>
 #include <panel.h>
@@ -56,5 +55,3 @@ class Column {
         
         void columnPrintFill(int colorPair, int x, int y, const char * fmt, ...);
 };
-
-#endif // SCREEN_H

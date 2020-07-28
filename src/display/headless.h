@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef HEADLESS_H
-#define HEADLESS_H
+#pragma once
 
 #include "../configuration/procmon_configuration.h"
 
@@ -19,5 +18,3 @@ class Headless
         // procmon configuration
         std::shared_ptr<ProcmonConfiguration> config;
 };
-
-#endif // HEADLESS_H

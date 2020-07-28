@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef STORAGE_ENGINE_H
-#define STORAGE_ENGINE_H
+#pragma once
 
 #include <vector>
 #include <tuple>
@@ -68,5 +67,3 @@ public:
     // Load API
     virtual std::tuple<uint64_t, std::string> Load(std::string filePath) = 0;
 };
-
-#endif

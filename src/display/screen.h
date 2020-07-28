@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef SCREEN_H
-#define SCREEN_H
+#pragma once
 
 #include <ncurses.h>
 #include <panel.h>
@@ -246,5 +245,3 @@ class Screen {
         std::string DecodeArguments(ITelemetry event);
         int FindSyscall(std::string& syscallName);
 };
-
-#endif // SCREEN_H

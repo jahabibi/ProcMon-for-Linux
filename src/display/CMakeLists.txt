@@ -1,5 +1,5 @@
 
-add_library(display-static STATIC
+add_library(display-lib 
     "${CMAKE_CURRENT_SOURCE_DIR}/screen.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/column.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/event_formatter.cpp"

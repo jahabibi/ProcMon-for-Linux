@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef TELEMETRY_BASE_H
-#define TELEMETRY_BASE_H
+#pragma once
 
 #include "stack_trace.h"
 #include "string.h"
@@ -35,5 +34,3 @@ struct ITelemetry
         return false;
     }
 };
-
-#endif // TELEMETRY_BASE_H

@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef TRACER_ENGINE_H
-#define TRACER_ENGINE_H
+#pragma once
 
 #include <functional>
 #include <memory>
@@ -39,5 +38,3 @@ public:
     virtual void SetRunState(int runState) { RunState = runState; }
     virtual int GetRunState() { return RunState; }
 };
-
-#endif // TRACER_ENGINE_H

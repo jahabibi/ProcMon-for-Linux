@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef SCREEN_CONFIGURATION_H
-#define SCREEN_CONFIGURATION_H
+#pragma once
 
 #define MAX_COLUMNS 5
 
@@ -32,5 +31,3 @@ class ScreenConfiguration
         sort columnSort;
         bool columnAscending;
 };
-
-#endif

@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#ifndef KILL_EVENT_FORMATTER_H
-#define KILL_EVENT_FORMATTER_H
+#pragma once
 
 #include <vector>
 
@@ -56,5 +55,3 @@ public:
     std::string GetDetails(ITelemetry event);
     void Initialize(const std::string syscall, ProcmonConfiguration* config) { EventFormatter::Initialize(syscall, config); }
 };
-
-#endif
