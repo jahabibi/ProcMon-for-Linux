@@ -15,11 +15,21 @@ configure_file (
   "${PROJECT_BINARY_DIR}/src/version.h"
 )
 
+include(FetchContent)
+
+# Fetch Catch2 testing framework.
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v2.7.2
+)
+FetchContent_MakeAvailable(Catch2)
+
 set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -DELPP_THREAD_SAFE -D ELPP_DEFAULT_LOG_FILE='\"/var/log/procmon.log\"'")
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+# option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 # Include required versioning, bcc, logging and sqlite3 header files. 
 include_directories(
@@ -28,6 +38,8 @@ include_directories(
   "${CMAKE_SOURCE_DIR}/vendor/sqlite3"
   ${CURSES_INCLUDE_DIR}
 )
+
+enable_testing()
 
 # Create a static library target for each subdirectory.
 add_subdirectory(src/common)
@@ -44,14 +56,59 @@ add_executable(
 
 target_link_libraries(
   procmon
-  configuration-lib
-  tracer-lib
-  storage-lib
-  common-lib
-  display-lib 
+  configuration-static
+  tracer-static
+  storage-static
+  common-static
+  bcc-static
+  display-static 
   ${CURSES_LIBRARIES}
   -lpanel
-  logging-lib
+  logging-static
   stdc++fs
   -lbcc
 )
+
+link_directories(
+  /usr/lib/x86_64-linux-gnu/
+)
+
+# setup general packing Variables
+set(CPACK_STRIP_FILES ON)
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )
+set(CPACK_PACKAGE_VENDOR "Microsoft")
+set(CPACK_PACKAGE_CONTACT "OSS Tooling Dev Team OSSToolingDevTeam@service.microsoft.com")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Procmon for Linux")
+set(CPACK_PACKAGE_DESCRIPTION "Procmon is a Linux reimagining of the classic Procmon tool from the Sysinternals suite of tools for Windows.  Procmon provides a convenient and efficient way for Linux developers to trace the syscall activity on the system.")
+set(CPACK_PACKAGE_VERSION_MAJOR "${procmon_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${procmon_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${procmon_VERSION_PATCH}")
+set(AZDO_BUILD_ID "999999")
+
+# setup license and readme for package
+SET(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
+SET(CPACK_RESOURCE_FILE_README ${PROJECT_SOURCE_DIR}/README.md)
+
+# setup CPACK RPM Variables
+set(CPACK_RPM_PACKAGE_DESCRIPTION   ${CPACK_PACKAGE_DESCRIPTION})
+set(CPACK_RPM_PACKAGE_LICENSE       "MIT")
+set(CPACK_RPM_PACKAGE_URL           "https://github.com/Microsoft/Procmon-for-Linux")
+set(CPACK_RPM_PACKAGE_GROUP         "Development/Tools")
+
+# setup CPACK DEB Variables
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
+set(CPACK_DEBIAN_PACKAGE_SECTION     "devel")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE    "https://github.com/Microsoft/Procmon-for-Linux")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER  "OSS Tooling Dev Team OSSToolingDevTeam@service.microsoft.com")
+
+# setup install
+INSTALL(TARGETS procmon DESTINATION /usr/bin)
+INSTALL(FILES procmon.1 DESTINATION /usr/share/man/man1/)
+
+# build debian package
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.26.1), libstdc++6 (>= 3.4.22), libncurses5 (>= 5.0)")
+execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}-${AZDO_BUILD_ID}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE})
+
+include(CPack)

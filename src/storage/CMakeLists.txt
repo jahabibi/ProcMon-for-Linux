@@ -1,12 +1,12 @@
 
-add_library(storage-lib STATIC
+add_library(storage-static STATIC
     "${CMAKE_CURRENT_SOURCE_DIR}/mock_storage_engine.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/sqlite3_storage_engine.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/storage_proxy.cpp"
 )
 
 # target_link_libraries(
-#     storage-lib
+#     storage-static
 #     sqlite3-static
 # )
 
@@ -14,8 +14,8 @@ add_library(storage-lib STATIC
 # add_executable(test-sqlite3-storage "${CMAKE_CURRENT_SOURCE_DIR}/test_sqlite3_storage_engine.cpp")
 # target_link_libraries(
 #     test-sqlite3-storage
-#     storage-lib
-#     logging-lib
+#     storage-static
+#     logging-static
 #     Catch2
 # )
 
