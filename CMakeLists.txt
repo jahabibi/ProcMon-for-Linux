@@ -59,14 +59,15 @@ target_link_libraries(
   configuration-static
   tracer-static
   storage-static
+  display-static
   common-static
-  bcc-static
-  display-static 
   ${CURSES_LIBRARIES}
   -lpanel
   logging-static
   stdc++fs
   -lbcc
+  -lpthread
+  -lsqlite3
 )
 
 link_directories(
