@@ -452,7 +452,7 @@ void Screen::run()
 
                 // handle mouse events
                 case KEY_MOUSE:
-                    if(getmouse(&mouseEvent) == OK) handleMouseEvent(&mouseEvent);
+                    if(getmouse(&mouseEvent) == NCURSES_OK) handleMouseEvent(&mouseEvent);
                     if(detailViewActive) showDetailView();
                     break;
                 
